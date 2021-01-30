@@ -1,0 +1,72 @@
+
+----MISUSE------
+
+library ieee;
+use ieee.std_logic_1644.all;
+use ieee.numeric_std.all;
+
+entity mod10_counter is 
+	port(
+		clk, reset : in std_logic;
+		q: out std_logic_vector (3 downto 0=
+	);
+end mod10_counter;
+
+architecture poor_async_arch of mod10_counter is
+	signal r_reg : unsgined (3downto 0);
+	signal r_next : unsgined (3 downto 0);
+	signal async_clr : std_logic;
+begin 
+	process(clk,async_clr)
+	begin
+		if(async_clr = '1') then 
+		r_reg <=(others => '0');
+
+		elsif (clk'event and clk = '1') then
+		r_reg <= r_next;
+		
+		end if;
+	end process;
+
+	async_clr <= '1' when (reset = '1' or r_reg = "1010") else
+		     '0';
+
+	r_next <= r_reg +1;
+	q <= std-logic_vector (r_reg);
+end poor_async_arch;
+
+
+-------TRUE ONE------
+library ieee;
+use ieee.std_logic_1644.all;
+use ieee.numeric_std.all;
+
+entity mod10_counter is 
+	port(
+		clk, reset : in std_logic;
+		q: out std_logic_vector (3 downto 0=
+	);
+end mod10_counter;
+
+architecture poor_async_arch of mod10_counter is
+	signal r_reg : unsgined (3downto 0);
+	signal r_next : unsgined (3 downto 0);
+begin 
+	process(clk,async_clr)
+	begin
+		if(reset = '1') then 
+		r_reg <=(others => '0');
+
+		elsif (clk'event and clk = '1') then
+		r_reg <= r_next;
+		
+		end if;
+	end process;
+	
+	r_next <= (others => '0') when r_reg=9 else --9 a geldiğinde sıfırla, değilse arttırarak devam et.
+		r_reg+1;
+	
+	q <= std_logic_vector(r_reg);
+
+end tow_seg_arch;
+

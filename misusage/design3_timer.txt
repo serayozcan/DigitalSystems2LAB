@@ -1,0 +1,47 @@
+library ieee;
+use ieee.std_logic_1644.all;
+use ieee.numeric_std.all;
+
+entity timer is
+	port(
+		clk,reset : std_logic;
+		sec,min: out std_logic_vector(5 downto 0 )
+	);
+end timer;
+
+architecture single_clock_arch of timer is
+	signal r_reg unsigned(3 downto 0);
+	signal r_next unsigned(3 downto 0);
+	signal s_reg,m_reg : unsigned ( 5 downto 0 );
+	signal s_next, m_next : unsgined (5 downto 0 );
+	signal s_en,m_en : std_logic;
+begin
+	process(clk,reset)
+	begin
+		if(reset = '1') then
+			r_reg <= (others => '0');
+			s_reg <= (others => '0');
+			m_reg <= (others => '0');
+		elsif (clk'event and clk ='1') then
+			r_reg <= r_next;
+			s_reg <= s_next;
+			m_reg <= m_next;
+		end if;
+	end process;
+
+	r_next <= (others =>'0') when r_reg = 999999 else
+		  r_reg +1;
+	s_en <= '1' when r_reg = 500000 else
+		'0';
+	s_next <= (others =>'0') when (s_reg = 59 and s_en= '1') else
+		  s_reg+1        when (s_en ='1') else
+		  '0';
+	m_en <= '1' when s_reg = 30 and s_en '1' else
+		'0';
+	m_next <= (others => '0') when (m_reg=59 and m_en ='1') else
+		  m_reg = m_reg+1 when m_en='1' else
+		  m_reg;
+sec <= std_logic_vector(s_reg);
+min <= std_logic_vector(m_reg);
+
+end single _clock_arch;

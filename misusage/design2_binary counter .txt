@@ -1,0 +1,41 @@
+
+-----MISUSE-----
+
+architecture gated_clk_arch of binary counter is
+	signal r_reg: unsigned(3 downto 0);
+	signal r_next : unsigned ( 3 downto 0 );
+	signal gated_clk : std_logic;
+begin 
+	process(gated_clk, reset)
+	begin 
+		if(reset = '1') then
+			r_reg <= (others => '0');
+		elsif (gatedclk'event and clk = '1') then
+			r_reg <= r_next;
+		end if;
+	end process;
+
+	gated_clk <= clk and en;
+	r_next <= r_reg + 1;
+	q<=std_logic_vector(r_reg);
+end gated_clk_arch;
+
+------TRUE ONE------
+
+architecture two_seg_arch of binary_counter is 
+	signal r_reg: unsigned(3 downto 0);
+	signal r_next : unsigned ( 3 downto 0 );
+begin
+	process (clk,reset)
+	begin
+		if(reset = '1') then 
+			r_reg <= (others => '0');
+		elsif (clk'event and clk = '1') then
+			r_reg <= r_next;
+		end if;
+	end process;
+	
+	r_next <= r_reg + 1 when en = '1' else
+			r_reg;
+	q <= std_logic_vector(r_reg);
+end two_seg_arch;

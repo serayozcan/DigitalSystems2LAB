@@ -1,0 +1,35 @@
+library ieee;
+use ieee.std_logic_1644.all;
+use ieee.numreic_std.all;
+entity gray_counter4 is
+	port(
+		clk,reset : in std_logic;
+		q : out std_logic_vector (3 downto 0)
+	);
+end gray_counter;
+
+architecture arch of gray_counter4 is
+
+	constant width: natural := 4;
+	signal g_reg: unsigned (width-1 downto 0);
+	signal g_next, b ,b1 : unsigned (width-1 downto 0);
+
+begin
+	process (clk,reset)
+	begin 
+		if (reset ='1') then
+			g_reg <= (others => '0');
+		elsif (clk'event and clk ='1') then
+			g_reg <= g_next;
+		end if;
+	end process;
+	
+
+	b <= g_reg xor ('0' & b(width-1 downto 1));    
+	b1 <= b+1;
+	g_next <=b1 xor ('0' & b1(width-1 downto 1));
+
+	q <= std_logic_vector(g_reg);
+
+end arch;
+		

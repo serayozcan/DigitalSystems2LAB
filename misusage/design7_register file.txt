@@ -1,0 +1,35 @@
+library ieee;
+use ieee.std-logic_1164.all;
+entity reg_file is 
+	port(
+		clk,reset : in std_logic;
+		wr_en : in std_logic;
+		w_addr: in std_logic_vector(1 downto 0);
+		r_a
+
+
+
+process(clk,reset)
+begin
+	if (reset = '1')
+		r_reg_0 <= (others => '0');
+		r_reg_1 <= (others => '0');
+		r_reg_2 <= (others => '0');
+		r_reg_3 <= (others => '0');
+	else (reset ='0' and pos_edge(clk))
+		r_reg_0 <= r_next_0;
+		r_reg_1 <= r_next_1;
+		r_reg_2 <= r_next_2;
+		r_reg_3 <= r_next_3;
+	end if;
+
+r_next_0 <= w_data when (wr_en = '1' and w_addr = "00") else
+		r_reg_0;
+r_next_1 <= w_data when (wr_en = '1' and w_addr = "01") else
+		r_reg_1;
+r_next_0 <= w_data when (wr_en = '1' and w_addr = "10") else
+		r_reg_2;
+r_next_1 <= w_data when (wr_en = '1' and w_addr = "11") else
+		r_reg_3;
+
+with r_addr0 select ???????????????????????????????????????????
